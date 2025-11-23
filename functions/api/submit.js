@@ -79,9 +79,11 @@ ${body.description}
     const newBranch = `submission-${submissionId}`;
     const filePath = `content/submissions/${submissionId}.md`;
 
+    const url = `https://api.github.com/repos/${repoOwner}/${repoName}/git/refs/heads/${baseBranch}`;
+
     // Get the base branch reference
     const refResponse = await fetch(
-      `https://api.github.com/repos/${repoOwner}/${repoName}/git/refs/heads/${baseBranch}`,
+      url,
       {
         headers: {
           Accept: 'application/vnd.github.v3+json',
@@ -90,6 +92,8 @@ ${body.description}
     );
 
     if (!refResponse.ok) {
+      console.error('Failed to get base branch reference', url);
+      console.error(await refResponse.text());
       throw new Error('Failed to get base branch reference');
     }
 
