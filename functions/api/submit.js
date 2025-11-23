@@ -84,7 +84,6 @@ ${body.description}
       `https://api.github.com/repos/${repoOwner}/${repoName}/git/refs/heads/${baseBranch}`,
       {
         headers: {
-          Authorization: `token ${githubToken}`,
           Accept: 'application/vnd.github.v3+json',
         },
       }

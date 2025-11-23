@@ -17,7 +17,7 @@ export default function SubmissionCard({ submission }) {
         >
           {submission.ufTitle}
         </Link>
-        <time className="text-sm text-neutral-500 whitespace-nowrap" dateTime={submission.createdAt.toISOString()}>
+        <time className="text-sm text-neutral-500 whitespace-nowrap" dateTime={submission.createdAt}>
           {formattedDate}
         </time>
       </div>
@@ -28,18 +28,26 @@ export default function SubmissionCard({ submission }) {
         </h3>
       )}
 
-      <p className="text-neutral-700 whitespace-pre-wrap line-clamp-3">
+      <p className="text-neutral-700 whitespace-pre-wrap line-clamp-3 mb-4">
         {submission.content}
       </p>
 
-      {submission.category && (
-        <div className="mt-3">
+      <div className="flex items-center justify-between gap-4">
+        {submission.category && (
           <span className="inline-block text-xs px-2 py-1 bg-neutral-100 text-neutral-600 rounded">
             {submission.category}
           </span>
-        </div>
-      )}
+        )}
+
+        <Link
+          href={`/submissao/${submission.id}`}
+          className="text-sm text-neutral-900 hover:underline font-medium ml-auto"
+        >
+          Ler mais →
+        </Link>
+      </div>
     </article>
   );
 }
+
 
