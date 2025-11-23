@@ -3,19 +3,25 @@ import Link from 'next/link';
 export default function Breadcrumb({ items }) {
   return (
     <nav className="mb-6 text-sm">
-      <ol className="flex items-center gap-2 text-neutral-600">
+      <ol className="flex flex-wrap items-center gap-2 text-neutral-600">
         <li>
           <Link href="/" className="hover:text-neutral-900 transition-colors">
             Início
           </Link>
         </li>
         {items.map((item, index) => (
-          <li key={item.code} className="flex items-center gap-2">
-            <span className="text-neutral-400">/</span>
+          <li key={item.code} className="flex items-center gap-2 min-w-0">
+            <span className="text-neutral-400 flex-shrink-0">/</span>
             {index === items.length - 1 ? (
-              <span className="text-neutral-900 font-medium">{item.title}</span>
+              <span className="text-neutral-900 font-medium truncate" title={item.title}>
+                {item.title}
+              </span>
             ) : (
-              <Link href={item.url} className="hover:text-neutral-900 transition-colors">
+              <Link
+                href={item.url}
+                className="hover:text-neutral-900 transition-colors truncate"
+                title={item.title}
+              >
                 {item.title}
               </Link>
             )}

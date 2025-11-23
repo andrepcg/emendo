@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Sobre o Emendo - Iniciativa de Cidadania Digital',
+  description: 'O Emendo é uma iniciativa open-source de cidadania digital destinada a identificar, reportar e mapear ineficiências sistémicas nos Cuidados de Saúde Primários.',
+};
+
 export default function AboutPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
@@ -135,6 +140,24 @@ export default function AboutPage() {
             >
               GitHub
             </a>.
+          </p>
+        </section>
+
+        <section className="mb-10">
+          <h2 className="text-2xl font-bold text-neutral-900 mb-4">
+            👨‍💻 Autor
+          </h2>
+          <p className="text-neutral-700">
+            O Emendo foi criado por{' '}
+            <a
+              href="https://github.com/andrepcg"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-neutral-900 underline hover:no-underline font-medium"
+            >
+              André Perdigão
+            </a>
+            , engenheiro de software e entusiasta de projetos de código cívico.
           </p>
         </section>
 

@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 export default function SubmissionCard({ submission }) {
   const date = new Date(submission.createdAt);
+  const isoDate = date.toISOString();
   const formattedDate = date.toLocaleDateString('pt-PT', {
     day: 'numeric',
     month: 'long',
@@ -17,7 +18,7 @@ export default function SubmissionCard({ submission }) {
         >
           {submission.ufTitle}
         </Link>
-        <time className="text-sm text-neutral-500 whitespace-nowrap" dateTime={submission.createdAt}>
+        <time className="text-sm text-neutral-500 whitespace-nowrap" dateTime={isoDate}>
           {formattedDate}
         </time>
       </div>

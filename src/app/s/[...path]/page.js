@@ -5,6 +5,35 @@ import SubmissionCard from '@/components/SubmissionCard';
 import { getHierarchyBreadcrumb, getChildren, getEntityByCode } from '@/lib/units';
 import { getSubmissionsByUnit } from '@/lib/submissions';
 
+export async function generateMetadata({ params }) {
+  const { path } = await params;
+
+  // Parse the path segments
+  const pathCodes = {};
+  if (path && path.length > 0) {
+    pathCodes.ars = parseInt(path[0]);
+    if (path.length > 1) pathCodes.uls = parseInt(path[1]);
+    if (path.length > 2) pathCodes.aces = parseInt(path[2]);
+    if (path.length > 3) pathCodes.uf = parseInt(path[3]);
+  }
+
+  // Get the breadcrumb to validate and get current entity
+  const breadcrumb = getHierarchyBreadcrumb(pathCodes);
+  if (breadcrumb.length === 0) {
+    return {
+      title: 'Página não encontrada - Emendo'
+    };
+  }
+
+  const currentLevel = breadcrumb[breadcrumb.length - 1];
+  const submissions = getSubmissionsByUnit(pathCodes);
+
+  return {
+    title: `${currentLevel.title} - Emendo`,
+    description: `${submissions.length} ${submissions.length === 1 ? 'submissão' : 'submissões'} em ${currentLevel.title}`
+  };
+}
+
 export default async function UnitPage({ params }) {
   const { path } = await params;
 

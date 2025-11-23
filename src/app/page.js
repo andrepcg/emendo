@@ -3,6 +3,11 @@ import SubmissionCard from '@/components/SubmissionCard';
 import { getAllSubmissions } from '@/lib/submissions';
 import { getAllARS } from '@/lib/units';
 
+export const metadata = {
+  title: 'Emendo - Plataforma de Reportes de Ineficiências nos Cuidados de Saúde Primários',
+  description: 'Plataforma para profissionais de saúde e colaboradores dos CSP reportarem ineficiências operacionais e burocráticas de forma anónima.',
+};
+
 export default function HomePage() {
   const submissions = getAllSubmissions().slice(0, 10); // Show latest 10
   const regions = getAllARS();
