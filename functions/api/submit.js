@@ -86,7 +86,9 @@ ${body.description}
       url,
       {
         headers: {
+          Authorization: `token ${githubToken}`,
           Accept: 'application/vnd.github.v3+json',
+          'User-Agent': 'Emendo-Bot',
         },
       }
     );
@@ -109,6 +111,7 @@ ${body.description}
           Authorization: `token ${githubToken}`,
           Accept: 'application/vnd.github.v3+json',
           'Content-Type': 'application/json',
+          'User-Agent': 'Emendo-Bot',
         },
         body: JSON.stringify({
           ref: `refs/heads/${newBranch}`,
@@ -130,6 +133,7 @@ ${body.description}
           Authorization: `token ${githubToken}`,
           Accept: 'application/vnd.github.v3+json',
           'Content-Type': 'application/json',
+          'User-Agent': 'Emendo-Bot',
         },
         body: JSON.stringify({
           message: `Nova submissão: ${body.category} - ${ufEntity?.Title || 'Unidade'}`,
@@ -160,6 +164,7 @@ ${body.description}
           Authorization: `token ${githubToken}`,
           Accept: 'application/vnd.github.v3+json',
           'Content-Type': 'application/json',
+          'User-Agent': 'Emendo-Bot',
         },
         body: JSON.stringify({
           title: `Novo reporte: ${body.category}`,
