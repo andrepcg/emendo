@@ -1,10 +1,8 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function SuccessMessage({ prUrl, unitPath }) {
-  const router = useRouter();
-
   return (
     <div className="space-y-6">
       <div className="p-6 bg-green-50 border border-green-200 rounded-lg">
@@ -41,20 +39,18 @@ export default function SuccessMessage({ prUrl, unitPath }) {
       </div>
 
       <div className="flex gap-4">
-        <button
-          type="button"
-          onClick={() => router.push(`/s/${unitPath}`)}
-          className="btn-primary flex-1"
+        <Link
+          href={`/s/${unitPath}`}
+          className="btn-primary flex-1 text-center"
         >
           Ver Unidade
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push('/')}
-          className="btn-secondary"
+        </Link>
+        <Link
+          href="/"
+          className="btn-secondary text-center"
         >
           Voltar ao Início
-        </button>
+        </Link>
       </div>
     </div>
   );
