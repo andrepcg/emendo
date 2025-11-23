@@ -1,0 +1,55 @@
+name: Process Submission
+
+on:
+  repository_dispatch:
+    types: [new-submission]
+  workflow_dispatch:
+    inputs:
+      submission_data:
+        description: 'Submission data (JSON)'
+        required: true
+      submission_id:
+        description: 'Submission ID'
+        required: true
+
+jobs:
+  create-submission:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Create submission file
+        run: |
+          # Parse submission data from workflow dispatch or repository dispatch
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            SUBMISSION_ID="${{ github.event.inputs.submission_id }}"
+            SUBMISSION_DATA='${{ github.event.inputs.submission_data }}'
+          else
+            SUBMISSION_ID="${{ github.event.client_payload.submission_id }}"
+            SUBMISSION_DATA='${{ github.event.client_payload.submission_data }}'
+          fi
+
+          # Create the markdown file
+          mkdir -p content/submissions
+          echo "$SUBMISSION_DATA" > "content/submissions/${SUBMISSION_ID}.md"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Nova submissão: ${{ github.event.client_payload.category || github.event.inputs.category }}"
+          committer: Emendo Bot <bot@emendo.pt>
+          author: Emendo Bot <bot@emendo.pt>
+          branch: "submission-${{ github.event.client_payload.submission_id || github.event.inputs.submission_id }}"
+          title: "Nova submissão: ${{ github.event.client_payload.category || github.event.inputs.category }}"
+          body: |
+            **Unidade:** ${{ github.event.client_payload.uf_title || github.event.inputs.uf_title }}
+            **Categoria:** ${{ github.event.client_payload.category || github.event.inputs.category }}
+
+            Submissão recebida através da plataforma Emendo.
+          labels: submission
+

@@ -1,36 +1,156 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Emendo
 
-## Getting Started
+**Do latim *emendo*: libertar de falhas, corrigir, curar.**
 
-First, run the development server:
+O **Emendo** é uma iniciativa *open-source* de cidadania digital destinada a identificar, reportar e mapear ineficiências sistémicas nos Cuidados de Saúde Primários (Centros de Saúde e USF).
+
+**Esta plataforma é destinada a profissionais e colaboradores internos** que trabalham no terreno e identificam problemas operacionais, burocráticos e administrativos.
+
+Nesta primeira fase, o nosso foco é absoluto e urgente: **os Cuidados de Saúde Primários (Centros de Saúde).**
+
+## 🏥 O Problema
+
+Os profissionais de saúde e administrativos que trabalham nos Centros de Saúde e USF enfrentam diariamente obstáculos sistémicos que dificultam o seu trabalho:
+
+* **Burocracia Paralisante:** Processos administrativos que requerem múltiplas aprovações para tarefas simples.
+* **Falta de Recursos:** Equipamentos avariados há semanas, sistemas informáticos obsoletos, infraestruturas degradadas.
+* **Problemas de Staffing:** Falta de contratações, distribuição inadequada de pessoal, utentes sem médico de família atribuído.
+* **Ineficiências Operacionais:** Processos lentos que envolvem múltiplas pessoas para resolver questões simples.
+
+## 💡 A Missão do Emendo
+
+Não somos um livro de reclamações externo; somos uma **ferramenta de diagnóstico interno**.
+
+O Emendo permite que **profissionais e colaboradores** submetam falhas de processo de forma rápida, estruturada e **anónima**. Agregamos estes dados para criar um "mapa de calor" da ineficiência operacional, transformando relatos anedóticos em estatísticas acionáveis. O objetivo não é apenas expor o problema, mas fornecer os dados necessários — **por quem trabalha no sistema** — para forçar a **cura**.
+
+## 🛠️ Como funciona
+
+A plataforma foca-se nos problemas operacionais identificados pelos profissionais:
+1.  **Submissão Rápida e Anónima:** O profissional sinaliza a ineficiência (ex: "Equipamento X avariado há 3 semanas sem resposta da manutenção").
+2.  **Associação à Unidade:** Cada problema é associado à USF/ACES específica.
+3.  **Visualização:** Um dashboard público que mostra quais as unidades com maiores índices de problemas sistémicos.
+
+---
+
+## 🚀 Tech Stack
+
+- **Next.js 16** - Static site generation
+- **Tailwind CSS 4** - Styling
+- **Cloudflare Pages** - Hosting and serverless functions
+- **Cloudflare Turnstile** - Bot protection
+- **GitHub** - Content storage and version control
+
+## 📦 Setup
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/andrepcg/emendo.git
+cd emendo
+
+# Install dependencies
+npm install
+
+# Copy environment variables
+cp .env.example .env.local
+# Edit .env.local with your keys
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The site will be available at `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+You'll need to set up:
 
-## Learn More
+1. **Cloudflare Turnstile** - Get keys from https://dash.cloudflare.com/turnstile
+   - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (public)
+   - `TURNSTILE_SECRET_KEY` (secret, for CF Functions)
 
-To learn more about Next.js, take a look at the following resources:
+2. **GitHub Integration** - Create a Personal Access Token with `repo` scope
+   - `GITHUB_REPO_OWNER`
+   - `GITHUB_REPO_NAME`
+   - `GITHUB_TOKEN`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+For local testing, use Cloudflare's test keys (see `.env.example`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🚢 Deployment
 
-## Deploy on Vercel
+### Cloudflare Pages
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Connect your GitHub repository to Cloudflare Pages
+2. Build settings:
+   - Build command: `npm run build`
+   - Build output directory: `out`
+3. Add environment variables in Cloudflare Pages settings
+4. Deploy!
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The site will automatically rebuild when:
+- New code is pushed to the repository
+- A submission PR is merged
+
+## 📁 Project Structure
+
+```
+emendo/
+├── src/
+│   ├── app/                    # Next.js pages
+│   │   ├── page.js            # Homepage
+│   │   ├── sobre/             # About page
+│   │   ├── submeter/          # Submit form
+│   │   └── s/[...path]/       # Hierarchical unit pages
+│   ├── components/            # React components
+│   ├── lib/                   # Utility functions
+│   └── data/                  # Healthcare units data
+├── content/
+│   └── submissions/           # Submission markdown files
+├── functions/
+│   └── api/
+│       └── submit.js          # CF Pages function for submissions
+└── public/                    # Static assets
+```
+
+## 📝 How Submissions Work
+
+1. Professional/staff member fills out the submission form on `/submeter`
+2. Form is protected by Cloudflare Turnstile
+3. On submit, the data is sent to the Cloudflare Pages Function (`/functions/api/submit.js`)
+4. The function:
+   - Validates the Turnstile token
+   - Creates a new branch in the GitHub repository
+   - Adds a markdown file with the submission
+   - Opens a pull request
+5. Maintainers review and merge the PR
+6. Site automatically rebuilds with the new submission
+
+## 🤝 Contribuir
+
+Este é um projeto de código cívico. Se és developer, designer, data scientist ou profissional de saúde que acredita num SNS mais eficiente, precisamos de ti.
+
+### Como Contribuir
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Issues
+
+Check out the [Issues](https://github.com/andrepcg/emendo/issues) to see where you can help.
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+**Vamos "emendar" o sistema, um *commit* de cada vez.**
